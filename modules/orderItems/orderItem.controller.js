@@ -1,63 +1,45 @@
-const OrderItem = require("./orderItem.model");
+const OrderItemService = require("./orderItem.service");
 
-const getAllOrderItems = async function getAllOrderItems(_, res) {
+const getAllOrderItems = async (_, res) => {
   try {
-    const orderItemsList = await OrderItem .find()
-    if (orderItemsList.length === 0) {
+    const orderItems = await OrderItemService.getAllOrderItems();
+    if (!orderItems.length) {
       return res.status(200).json({
-        status: "Sucesss",
+        status: "Success",
         message: "No order items were added yet",
       });
     }
-    res.status(200).send(orderItemsList);
+    res.status(200).json({ status: "Success", orderItems });
   } catch (err) {
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
+    next(err);
   }
 };
 
-const getOrderitem = async function getOrderitem(req, res) {
+const getOrderitem = async (req, res) => {
   try {
-    const orderitem = await OrderItem.findById(req.params.id);
-    if (orderitem) {
-      res.status(200).json({
-        status: "Success",
-        orderitem,
-      });
-    } else {
-      res.status(404).json({
-        status: "Failed",
-        message: "Order item wasn't found",
-      });
+    const orderItem = await OrderItemService.getOrderItemById(req.params.id);
+    if (!orderItem) {
+      return res
+        .status(404)
+        .json({ status: "Failed", message: "Order item wasn't found" });
     }
+    res.status(200).json({ status: "Success", orderItem });
   } catch (err) {
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
+    next(err);
   }
 };
 
-const getCount = async function getCount(_, res) {
+const getCount = async (_, res) => {
   try {
-    const orderItemListCount = await OrderItem.countDocuments();
-    res.status(200).json({
-      status: "Sucesss",
-      count: orderItemListCount,
-    });
+    const count = await OrderItemService.getOrderItemCount();
+    res.status(200).json({ status: "Success", count });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
+    next(err);
   }
 };
 
 module.exports = {
   getAllOrderItems,
   getOrderitem,
-  getCount
+  getCount,
 };

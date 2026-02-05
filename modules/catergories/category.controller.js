@@ -1,139 +1,86 @@
-const Category = require("./category.model");
+const CategoryService = require("./category.service");
 
-const getAllCategories = async function getAllCategories(_, res) {
-  try {
-    const categroyList = await Category.find();
-    if (categroyList.length === 0) {
-      return res.status(200).json({
-        status: "Sucesss",
-        message: "No categories were added yet",
-      });
-    }
-    res.status(200).send(categroyList);
-  } catch (err) {
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
-  }
-};
+class CategoryController {
+  static async getAll(req, res, next) {
+    try {
+      const categories = await CategoryService.getAllCategories();
 
-const getCategory = async function getCategory(req, res) {
-  try {
-    const category = await Category.findById(req.params.id);
-    if (category) {
       res.status(200).json({
         status: "Success",
-        category,
+        data: categories,
       });
-    } else {
-      res.status(404).json({
-        status: "Failed",
-        message: "Category wasn't found",
-      });
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
   }
-};
 
-const updateCategory = async function updateCategory(req, res) {
-  try {
-    const category = await Category.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        icon: req.body.icon,
-        color: req.body.color,
-      },
-      { new: true },
-    );
-    if (category) {
+  static async getOne(req, res, next) {
+    try {
+      const category = await CategoryService.getCategoryById(req.params.id);
+
+      res.status(200).json({
+        status: "Success",
+        data: category,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getCount(req, res, next) {
+    try {
+      const count = await CategoryService.getCategoryCount();
+
+      res.status(200).json({
+        status: "Success",
+        count,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async create(req, res, next) {
+    try {
+      const category = await CategoryService.createCategory(req.body);
+
       res.status(201).json({
         status: "Success",
-        category,
+        data: category,
       });
-    } else {
-      res.status(404).json({
-        status: "Failed",
-        message: "Category wasn't found",
-      });
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    res.status(400).json({
-      status: "Failed",
-      error: err,
-    });
   }
-};
 
-const postCategory = async function postCategory(req, res) {
-  try {
-    let category = new Category({
-      name: req.body.name,
-      icon: req.body.icon,
-      color: req.body.color,
-    });
-    category = await category.save();
-    res.status(201).json({
-      status: "Success",
-      category,
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
-  }
-};
+  static async update(req, res, next) {
+    try {
+      const category = await CategoryService.updateCategory(
+        req.params.id,
+        req.body
+      );
 
-const deleteCategory = function deleteCategory(req, res) {
-  Category.findByIdAndDelete(req.params.id)
-    .then((category) => {
-      if (category) {
-        res.status(200).json({
-          status: "Success",
-          message: "Category was deleted successfully",
-        });
-      } else {
-        res.status(404).json({
-          status: "Success",
-          message: "Category wasn't found",
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(400).json({
-        status: "Failed",
-        error: err,
+      res.status(200).json({
+        status: "Success",
+        data: category,
       });
-    });
-};
-
-const getCount = async function getCount(_, res) {
-  try {
-    const categoryCount = await Category.countDocuments();
-    res.status(200).json({
-      status: "Sucesss",
-      count: categoryCount,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      status: "Failed",
-      error: err,
-    });
+    } catch (err) {
+      next(err);
+    }
   }
-};
 
-module.exports = {
-  getAllCategories,
-  postCategory,
-  deleteCategory,
-  getCategory,
-  updateCategory,
-  getCount
-};
+  static async delete(req, res, next) {
+    try {
+      await CategoryService.deleteCategory(req.params.id);
+
+      res.status(200).json({
+        status: "Success",
+        message: "Category deleted successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+}
+
+module.exports = CategoryController;

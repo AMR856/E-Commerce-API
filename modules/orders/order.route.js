@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   validateBody,
   validateParams,
-} = require("../../middlewares/validators");
+} = require("../../middlewares/validator");
 const {
   createOrderSchema,
   getOrderSchema,
@@ -35,6 +35,5 @@ router.get("/:id", validateParams(getOrderSchema), getOrder);
 router.post("/", validateBody(createOrderSchema), postOrder);
 router.post("/:id", validateParams(updateOrderStatusSchema), updateStatus);
 router.delete("/:id", validateParams(deleteOrderSchema), deleteOrder);
-
 
 module.exports = router;
