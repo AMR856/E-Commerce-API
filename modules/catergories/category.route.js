@@ -8,5 +8,6 @@ router.get('/', getAllCategories);
 router.delete('/:id', deleteCategory);
 router.get('/:id', getCategory);
 router.put('/:id', updateCategory);
-router.get('/get/count', getCount)
+router.get('/get/count', getCount);
+
 module.exports = router;

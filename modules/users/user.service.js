@@ -36,12 +36,10 @@ class UserService {
     return await User.countDocuments();
   }
 
-  // Delete a user by ID
   async deleteUserById(id) {
     return await User.findByIdAndDelete(id);
   }
 
-  // Login user and generate JWT
   async login(email, password) {
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");

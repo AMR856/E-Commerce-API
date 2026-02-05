@@ -1,14 +1,5 @@
 const userService = require("./user.service");
 
-const postUser = async (req, res, next) => {
-  try {
-    const user = await userService.createUser(req.body);
-    res.status(201).json({ status: "Success", user });
-  } catch (err) {
-    next(err);
-  }
-};
-
 
 const getAllUsers = async (_, res, next) => {
   try {
@@ -33,6 +24,24 @@ const getUser = async (req, res, next) => {
   }
 };
 
+const getCount = async (_, res, next) => {
+  try {
+    const count = await userService.getUserCount();
+    res.status(200).json({ status: "Success", count });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const registerUser = async (req, res, next) => {
+  try {
+    const user = await userService.createUser(req.body);
+    res.status(201).json({ status: "Success", user });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const loginUser = async (req, res, next) => {
   try {
     const result = await userService.loginUser(
@@ -45,14 +54,7 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-const getCount = async (_, res, next) => {
-  try {
-    const count = await userService.getUserCount();
-    res.status(200).json({ status: "Success", count });
-  } catch (err) {
-    next(err);
-  }
-};
+
 
 const deleteUser = async (req, res, next) => {
   try {
@@ -66,7 +68,7 @@ const deleteUser = async (req, res, next) => {
 };
 
 module.exports = {
-  postUser,
+  registerUser,
   getAllUsers,
   getUser,
   loginUser,

@@ -1,13 +1,40 @@
 const express = require("express");
 const router = express.Router();
-const { getAllOrders, postOrder, getOrder, updateStatus, deleteOrder, getTotalSales, getOrderCount, getUserOrders } = require("./order.controller");
+const {
+  validateBody,
+  validateParams,
+} = require("../../middlewares/validators");
+const {
+  createOrderSchema,
+  getOrderSchema,
+  deleteOrderSchema,
+  getUserOrdersSchema,
+  updateOrderStatusSchema,
+} = require("./order.validation");
 
-router.get('/', getAllOrders);
-router.post('/', postOrder);
-router.get('/:id', getOrder);
-router.post('/:id', updateStatus);
-router.delete('/:id', deleteOrder);
-router.get('/get/totalsales', getTotalSales);
-router.get('/get/count', getOrderCount);
-router.get('/get/userorders/:userId', getUserOrders);
+const {
+  getAllOrders,
+  postOrder,
+  getOrder,
+  updateStatus,
+  deleteOrder,
+  getTotalSales,
+  getOrderCount,
+  getUserOrders,
+} = require("./order.controller");
+
+router.get("/", getAllOrders);
+router.get(
+  "/get/userorders/:userId",
+  validateParams(getUserOrdersSchema),
+  getUserOrders,
+);
+router.get("/get/count", getOrderCount);
+router.get("/get/totalsales", getTotalSales);
+router.get("/:id", validateParams(getOrderSchema), getOrder);
+router.post("/", validateBody(createOrderSchema), postOrder);
+router.post("/:id", validateParams(updateOrderStatusSchema), updateStatus);
+router.delete("/:id", validateParams(deleteOrderSchema), deleteOrder);
+
+
 module.exports = router;
