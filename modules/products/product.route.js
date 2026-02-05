@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { postProduct, getAllProducts, getProduct, updateProduct, deleteProduct, getCount, isFeatured } = require("../controllers/product");
+const { postProduct, getAllProducts, getProduct, updateProduct, deleteProduct, getCount, isFeatured } = require("./product.controller");
 const { request } = require("chai");
-const multer = request('multer');
+const multer = require('multer');
 
 // for filemap explain type for pass
 const FILE_TYPE_MAP = {

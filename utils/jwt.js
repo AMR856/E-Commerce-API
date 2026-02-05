@@ -1,4 +1,4 @@
-const {expressjwt: jwt} = require("express-jwt");
+const { expressjwt: jwt } = require("express-jwt");
 
 const authJwt = function authJwt() {
   const secret = process.env.JWT_SECRET;
@@ -6,17 +6,17 @@ const authJwt = function authJwt() {
   return jwt({
     secret,
     algorithms: ["HS256"],
-    isRevoked: isRevoked
+    isRevoked: isRevoked,
   }).unless({
     path: [
-      {url: /\/public\/uploads(.*)/, methods: ['GET', 'OPTIONS']},
-      {url: /\/api\/v1\/products(.*)/, methods: ['GET', 'OPTIONS']},
-      {url: /\/api\/v1\/category(.*)/, methods: ['GET', 'OPTIONS']},
+      { url: /\/public\/uploads(.*)/, methods: ["GET", "OPTIONS"] },
+      { url: /\/api\/v1\/products(.*)/, methods: ["GET", "OPTIONS"] },
+      { url: /\/api\/v1\/category(.*)/, methods: ["GET", "OPTIONS"] },
       `${apiURL}/users/login`,
-      `${apiURL}/users/register`
-    ]
+      `${apiURL}/users/register`,
+    ],
   });
-}
+};
 
 async function isRevoked(_, token) {
   if (token.payload.isAdmin == false) {

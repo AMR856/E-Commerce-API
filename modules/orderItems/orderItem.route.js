@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAllOrderItems, getOrderitem, getCount } = require("../controllers/order-item");
+const { getAllOrderItems, getOrderitem, getCount } = require("./orderItem.controller");
 
 router.get('/', getAllOrderItems);
 router.get('/:id', getOrderitem);

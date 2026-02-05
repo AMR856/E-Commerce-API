@@ -1,5 +1,5 @@
-const Order = require("../models/order");
-const OrderItem = require("../models/order-item");
+const Order = require("./order.model");
+const OrderItem = require("../orderItems/orderItem.model");
 
 const postOrder = async function postOrder(req, res) {
   try {

@@ -1,22 +1,21 @@
-const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
+
+const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const fs = require("fs");
-const productRouter = require("./routes/product");
-const categoryRouter = require('./routes/category');
-const userRouter = require('./routes/user');
-const orderRouter = require('./routes/order');
-const orderItemsRouter = require('./routes/order-item');
+const productRouter = require('./modules/products/product.route');
+const categoryRouter = require('./modules/catergories/category.route');
+const userRouter = require('./modules/users/user.route');
+const orderRouter = require('./modules/orders/order.route');
+const orderItemsRouter = require('./modules/orderItems/orderItem.route');
+const authJwt = require('./utils/jwt');
+const errorHandler = require("./utils/error-handler");
 
-dotenv.config();
-const authJwt = require('./helpers/jwt');
-const errorHandler = require("./helpers/error-handler");
-const databaseStr = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.qatrhwq.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
+const databaseStr = process.env.DATABASE_CONNECTION_URL;
 const app = express();
 const port = process.env.PORT || 3000;
-
-
 
 const logFilePath = "./http.log";
 const accessLogStream = fs.createWriteStream(logFilePath, {
