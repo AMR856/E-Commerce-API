@@ -2,35 +2,52 @@ const express = require("express");
 const router = express.Router();
 const OrderItemController = require("./orderItem.controller");
 const validator = require("../../middlewares/validator");
-const OrderItemValidationSchema = require("./orderItem.validation");
+const OrderItemValidationSchemas = require("./orderItem.validation");
+const authorize = require("../../middlewares/authorize");
+const { PERMISSIONS } = require("../../config/roles");
 
-router.get("/", OrderItemController.getAll);
+// User Specfic
+// Authenticated users (ownership enforced in service, should be the same owner)
+router.post(
+  "/",
+  authorize(PERMISSIONS.MANAGE_OWN_ORDER_ITEMS),
+  validator.validateBody(OrderItemValidationSchemas.create),
+  OrderItemController.create,
+);
 
 router.get(
   "/:id",
-  validator.validateParams(OrderItemValidationSchema.idParam),
-  OrderItemController.getOne
-);
-
-router.get("/get/count", OrderItemController.getCount);
-
-router.post(
-  "/",
-  validator.validateBody(OrderItemValidationSchema.create),
-  OrderItemController.create
+  authorize(PERMISSIONS.READ_OWN_ORDER_ITEMS),
+  validator.validateParams(OrderItemValidationSchemas.idParam),
+  OrderItemController.getOne, // Checked
 );
 
 router.put(
   "/:id",
-  validator.validateParams(OrderItemValidationSchema.idParam),
-  validator.validateBody(OrderItemValidationSchema.update),
-  OrderItemController.update
+  authorize(PERMISSIONS.MANAGE_OWN_ORDER_ITEMS),
+  validator.validateParams(OrderItemValidationSchemas.idParam),
+  validator.validateBody(OrderItemValidationSchemas.update),
+  OrderItemController.update, // Checked
 );
 
 router.delete(
   "/:id",
-  validator.validateParams(OrderItemValidationSchema.idParam),
-  OrderItemController.delete
+  authorize(PERMISSIONS.MANAGE_OWN_ORDER_ITEMS),
+  validator.validateParams(OrderItemValidationSchemas.idParam),
+  OrderItemController.delete, // Checked
+);
+
+// Admin-only
+router.get(
+  "/",
+  authorize(PERMISSIONS.READ_ALL_ORDER_ITEMS),
+  OrderItemController.getAll,
+);
+
+router.get(
+  "/get/count",
+  authorize(PERMISSIONS.READ_ALL_ORDER_ITEMS),
+  OrderItemController.getCount,
 );
 
 module.exports = router;

@@ -1,6 +1,8 @@
 const User = require("./user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const CustomError = require("../../utils/customError");
+const HTTPStatusText = require('../../utils/HTTPStatusText');
 
 class UserService {
   static selectionStr = "-passwordHash -__v";
@@ -36,15 +38,19 @@ class UserService {
 
   static async login(email, password) {
     const user = await User.findOne({ email });
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      throw new CustomError("Invalid email or password", 401, HTTPStatusText.FAIL);
+    }
 
     const isValid = bcrypt.compareSync(password, user.passwordHash);
-    if (!isValid) throw new Error("Wrong password");
+    if (!isValid) {
+      throw new CustomError("Invalid email or password", 401, HTTPStatusText.FAIL);
+    }
 
     const token = jwt.sign(
       {
         userId: user.id,
-        role: user.role
+        role: user.role,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
@@ -61,12 +67,12 @@ class UserService {
   static async changePassword(userId, oldPassword, newPassword) {
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error("User not found");
+      throw new CustomError("User not found", 404, HTTPStatusText.FAIL);
     }
 
     const isValid = bcrypt.compareSync(oldPassword, user.passwordHash);
     if (!isValid) {
-      throw new Error("Old password is incorrect");
+      throw new CustomError("Old password is incorrect", 401, HTTPStatusText.FAIL);
     }
 
     user.passwordHash = bcrypt.hashSync(newPassword, 10);

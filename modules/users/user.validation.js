@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 class UserValidationSchemas {
-  static regiser = Joi.object({
+  static register = Joi.object({
     name: Joi.string().min(1).required().messages({
       "string.empty": "Name is a required field",
     }),
@@ -33,11 +33,64 @@ class UserValidationSchemas {
     }),
   });
 
+    static update = Joi.object({
+    name: Joi.string().trim().messages({
+      "string.base": "Name must be a string",
+      "string.empty": "Name cannot be empty",
+    }),
+    email: Joi.string().email().messages({
+      "string.email": "Email must be valid",
+      "string.empty": "Email cannot be empty",
+    }),
+    password: Joi.string().min(6).messages({
+      "string.min": "Password must be at least 6 characters",
+      "string.empty": "Password cannot be empty",
+    }),
+    street: Joi.string().trim().allow("").messages({
+      "string.base": "Street must be a string",
+    }),
+    apartment: Joi.string().trim().allow("").messages({
+      "string.base": "Apartment must be a string",
+    }),
+    city: Joi.string().trim().allow("").messages({
+      "string.base": "City must be a string",
+    }),
+    zip: Joi.string().trim().allow("").messages({
+      "string.base": "ZIP must be a string",
+    }),
+    country: Joi.string().trim().allow("").messages({
+      "string.base": "Country must be a string",
+    }),
+    phone: Joi.string().trim().allow("").messages({
+      "string.base": "Phone must be a string",
+    }),
+    role: Joi.string().valid("user", "admin").messages({
+      "any.only": "Role must be either 'user' or 'admin'",
+    }),
+  }).min(1)
+  .messages({
+    "object.min": "At least one field must be provided to update",
+  });
+
   static idParam = Joi.object({
     id: Joi.string().length(24).hex().required().messages({
       "string.empty": "User ID is required",
       "string.length": "User ID must be 24 characters",
       "string.hex": "User ID must be a valid hexadecimal",
+    }),
+  });
+  static changePassword = Joi.object({
+    oldPassword: Joi.string().min(6).required().messages({
+      "string.base": "Old password must be a string",
+      "string.empty": "Old password is required",
+      "string.min": "Old password must be at least 6 characters",
+      "any.required": "Old password is required",
+    }),
+    newPassword: Joi.string().min(6).required().messages({
+      "string.base": "New password must be a string",
+      "string.empty": "New password is required",
+      "string.min": "New password must be at least 6 characters",
+      "any.required": "New password is required",
     }),
   });
 }

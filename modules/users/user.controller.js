@@ -1,10 +1,10 @@
 const userService = require("./user.service");
+const HTTPStatusText = require("../../utils/HTTPStatusText");
 
 class UserController {
-
   static async getMe(req, res, next) {
     try {
-      const user = await userService.getUserById(req.user.userId);
+      const user = await userService.getOne(req.user.userId);
       res.json({ status: "Success", user });
     } catch (err) {
       next(err);
@@ -17,10 +17,10 @@ class UserController {
       if (users.length === 0) {
         return res
           .status(200)
-          .json({ status: "Success", message: "No users yet" });
+          .json({ status: HTTPStatusText.SUCCESS, message: "No users yet" });
       }
 
-      res.status(200).json({ status: "Success", data: users });
+      res.status(200).json({ status: HTTPStatusText.SUCCESS, data: users });
     } catch (err) {
       next(err);
     }
@@ -29,7 +29,7 @@ class UserController {
   static async getOne(req, res, next) {
     try {
       const user = await userService.getOne(req.params.id);
-      res.status(200).json({ status: "Success", user });
+      res.status(200).json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {
       next(err);
     }
@@ -38,7 +38,7 @@ class UserController {
   static async getCount(_, res, next) {
     try {
       const count = await userService.getUserCount();
-      res.status(200).json({ status: "Success", count });
+      res.status(200).json({ status: HTTPStatusText.SUCCESS, count });
     } catch (err) {
       next(err);
     }
@@ -47,7 +47,7 @@ class UserController {
   static async register(req, res, next) {
     try {
       const user = await userService.create(req.body);
-      res.status(201).json({ status: "Success", user });
+      res.status(201).json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {
       next(err);
     }
@@ -55,12 +55,9 @@ class UserController {
 
   static async login(req, res, next) {
     try {
-      const result = await userService.login(
-        req.body.email,
-        req.body.password,
-      );
+      const result = await userService.login(req.body.email, req.body.password);
 
-      res.status(200).json({ status: "Success", ...result });
+      res.status(200).json({ status: HTTPStatusText.SUCCESS, ...result });
     } catch (err) {
       next(err);
     }
@@ -71,20 +68,26 @@ class UserController {
       await userService.delete(req.params.id);
       res
         .status(200)
-        .json({ status: "Success", message: "User deleted successfully" });
+        .json({
+          status: HTTPStatusText.SUCCESS,
+          message: "User deleted successfully",
+        });
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async update(req, res, next) {
+    try {
+      const userId = req.params.id || req.user.userId;
+
+      const user = await userService.update(userId, req.body);
+
+      res.status(200).json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {
       next(err);
     }
   }
 
-  static async update(req, res, next) {
-    try {
-      const user = await userService.update(req.params.id, req.body);
-      res.status(200).json({ status: "Success", user });
-    } catch (err) {
-      next(err);
-    }
-  }
   static async changePassword(req, res, next) {
     try {
       await userService.changePassword(
@@ -92,13 +95,17 @@ class UserController {
         req.body.oldPassword,
         req.body.newPassword,
       );
-      res.status(200).json({ status: "Success", message: "Password updated" });
+      res
+        .status(200)
+        .json({ status: HTTPStatusText.SUCCESS, message: "Password updated" });
     } catch (err) {
       next(err);
     }
   }
   static async logout(_, res) {
-    res.status(200).json({ status: "Success", message: "Logged out" });
+    res
+      .status(200)
+      .json({ status: HTTPStatusText.SUCCESS, message: "Logged out" });
   }
 }
 

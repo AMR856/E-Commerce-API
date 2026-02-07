@@ -1,19 +1,14 @@
 const OrderItemService = require("./orderItem.service");
+const HTTPStatusText = require("../../utils/HTTPStatusText");
 
 class OrderItemController {
   static async getAll(req, res, next) {
     try {
-      const orderItems = await OrderItemService.getAllOrderItems();
-
-      if (!orderItems.length) {
-        return res.status(200).json({
-          status: "Success",
-          message: "No order items were added yet",
-        });
-      }
+      const orderItems = await OrderItemService.getAll(req.user);
 
       res.status(200).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
+        results: orderItems.length,
         data: orderItems,
       });
     } catch (err) {
@@ -23,10 +18,13 @@ class OrderItemController {
 
   static async getOne(req, res, next) {
     try {
-      const orderItem = await OrderItemService.getOrderItemById(req.params.id);
+      const orderItem = await OrderItemService.getOne(
+        req.params.id,
+        req.user
+      );
 
       res.status(200).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
         data: orderItem,
       });
     } catch (err) {
@@ -36,10 +34,10 @@ class OrderItemController {
 
   static async getCount(req, res, next) {
     try {
-      const count = await OrderItemService.getOrderItemCount();
+      const count = await OrderItemService.getCount(req.user);
 
       res.status(200).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
         count,
       });
     } catch (err) {
@@ -49,9 +47,13 @@ class OrderItemController {
 
   static async create(req, res, next) {
     try {
-      const orderItem = await OrderItemService.createOrderItem(req.body);
+      const orderItem = await OrderItemService.create(
+        req.body,
+        req.user
+      );
+
       res.status(201).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
         data: orderItem,
       });
     } catch (err) {
@@ -61,12 +63,14 @@ class OrderItemController {
 
   static async update(req, res, next) {
     try {
-      const orderItem = await OrderItemService.updateOrderItem(
+      const orderItem = await OrderItemService.update(
         req.params.id,
-        req.body
+        req.body,
+        req.user
       );
+
       res.status(200).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
         data: orderItem,
       });
     } catch (err) {
@@ -76,9 +80,10 @@ class OrderItemController {
 
   static async delete(req, res, next) {
     try {
-      await OrderItemService.deleteOrderItem(req.params.id);
+      await OrderItemService.delete(req.params.id, req.user);
+
       res.status(200).json({
-        status: "Success",
+        status: HTTPStatusText.SUCCESS,
         message: "Order item deleted successfully",
       });
     } catch (err) {

@@ -1,39 +1,59 @@
 const express = require("express");
 const router = express.Router();
-const {
-  validateBody,
-  validateParams,
-} = require("../../middlewares/validator");
-const {
-  createOrderSchema,
-  getOrderSchema,
-  deleteOrderSchema,
-  getUserOrdersSchema,
-  updateOrderStatusSchema,
-} = require("./order.validation");
+const validator = require("../../middlewares/validator");
+const OrderValidationSchemas = require("./order.validation");
+const OrderController = require("./order.controller");
+const authorize = require("../../middlewares/authorize");
+const { PERMISSIONS } = require("../../config/roles");
 
-const {
-  getAllOrders,
-  postOrder,
-  getOrder,
-  updateStatus,
-  deleteOrder,
-  getTotalSales,
-  getOrderCount,
-  getUserOrders,
-} = require("./order.controller");
-
-router.get("/", getAllOrders);
+// Admin
+router.get("/", authorize(PERMISSIONS.READ_ALL_ORDERS), OrderController.getAll);
 router.get(
   "/get/userorders/:userId",
-  validateParams(getUserOrdersSchema),
-  getUserOrders,
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  validator.validateParams(OrderValidationSchemas.getUserOrders),
+  OrderController.getUserOrders,
 );
-router.get("/get/count", getOrderCount);
-router.get("/get/totalsales", getTotalSales);
-router.get("/:id", validateParams(getOrderSchema), getOrder);
-router.post("/", validateBody(createOrderSchema), postOrder);
-router.post("/:id", validateParams(updateOrderStatusSchema), updateStatus);
-router.delete("/:id", validateParams(deleteOrderSchema), deleteOrder);
+router.get(
+  "/get/count",
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  OrderController.getCount,
+);
+router.get(
+  "/get/totalsales",
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  OrderController.getTotalSales,
+);
+
+// User Specfic (It has the match the id of the user or be an admin)
+router.get(
+  "/:id",
+  authorize(PERMISSIONS.READ_OWN_ORDERS),
+  validator.validateParams(OrderValidationSchemas.idParam),
+  OrderController.getOne, // Checked
+);
+router.post(
+  "/",
+  authorize(PERMISSIONS.MANAGE_OWN_ORDERS),
+  validator.validateBody(OrderValidationSchemas.create),
+  OrderController.create,
+);
+router.put(
+  "/:id",
+  authorize(PERMISSIONS.MANAGE_OWN_ORDERS),
+  OrderController.update, // Checked 
+);
+router.post(
+  "/:id",
+  authorize(PERMISSIONS.MANAGE_OWN_ORDERS),
+  validator.validateParams(OrderValidationSchemas.idParam),
+  OrderController.updateStatus, // Checked 
+);
+router.delete(
+  "/:id",
+  authorize(PERMISSIONS.MANAGE_OWN_ORDERS),
+  validator.validateParams(OrderValidationSchemas.idParam),
+  OrderController.delete,  // Checked 
+);
 
 module.exports = router;

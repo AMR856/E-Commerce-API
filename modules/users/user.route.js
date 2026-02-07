@@ -6,10 +6,10 @@ const UserValidationSchemas = require("./user.validation");
 const UserController = require("./user.controller");
 const { PERMISSIONS } = require("../../config/roles");
 
-// public
+// Public
 router.post(
   "/register",
-  validator.validateBody(UserValidationSchemas.regiser),
+  validator.validateBody(UserValidationSchemas.register),
   UserController.register,
 );
 
@@ -19,8 +19,24 @@ router.post(
   UserController.login,
 );
 
-// User Roles (JWT will be used)
-router.get("/me", authorize(PERMISSIONS.READ_USERS), UserController.getMe);
+// USER
+router.get("/me", authorize(PERMISSIONS.READ_MYSELF), UserController.getMe);
+router.get("/logout", UserController.logout);
+
+router.put(
+  "/me",
+  authorize(PERMISSIONS.UPDATE_MYSELF),
+  validator.validateBody(UserValidationSchemas.update),
+  UserController.update,
+);
+router.post(
+  "/change-password",
+  authorize(PERMISSIONS.UPDATE_MYSELF),
+  validator.validateBody(UserValidationSchemas.changePassword),
+  UserController.changePassword,
+);
+
+// Admin
 router.get("/", authorize(PERMISSIONS.READ_USERS), UserController.getAll);
 router.get(
   "/get/count",
@@ -30,16 +46,22 @@ router.get(
 router.get(
   "/:id",
   authorize(PERMISSIONS.READ_USERS),
-  validator.validateParams(UserValidationSchemas.get),
+  validator.validateParams(UserValidationSchemas.idParam),
   UserController.getOne,
 );
-router.get("/logout", UserController.logout);
 
-// Admin Roles
+router.put(
+  "/:id",
+  authorize(PERMISSIONS.MANAGE_USERS),
+  validator.validateParams(UserValidationSchemas.idParam),
+  validator.validateBody(UserValidationSchemas.update),
+  UserController.update,
+);
+
 router.delete(
   "/:id",
   authorize(PERMISSIONS.MANAGE_USERS),
-  validator.validateParams(UserValidationSchemas.get),
+  validator.validateParams(UserValidationSchemas.idParam),
   UserController.delete,
 );
 

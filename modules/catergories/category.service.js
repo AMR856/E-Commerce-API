@@ -1,4 +1,6 @@
 const Category = require("./category.model");
+const CustomError = require("../../utils/customError");
+const HTTPStatusText = require("../../utils/HTTPStatusText");
 
 class CategoryService {
   static async getAll() {
@@ -8,7 +10,7 @@ class CategoryService {
   static async getOne(id) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new Error("Category not found");
+      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
     }
     return category;
   }
@@ -16,11 +18,17 @@ class CategoryService {
   static async getCount() {
     return await Category.countDocuments();
   }
+
   static async create(data) {
     const existing = await Category.findOne({ name: data.name });
     if (existing) {
-      throw new Error("Category already exists");
+      throw new CustomError(
+        409,
+        "Category already exists",
+        HTTPStatusText.ERROR,
+      );
     }
+
     const category = new Category(data);
     return await category.save();
   }
@@ -28,7 +36,7 @@ class CategoryService {
   static async update(id, data) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new Error("Category not found");
+      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
     }
 
     if (data.name) {
@@ -36,8 +44,13 @@ class CategoryService {
         name: data.name,
         _id: { $ne: id },
       });
+
       if (duplicate) {
-        throw new Error("Category name already exists");
+        throw new CustomError(
+          409,
+          "Category name already exists",
+          HTTPStatusText.ERROR,
+        );
       }
     }
 
@@ -48,13 +61,18 @@ class CategoryService {
   static async delete(id) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new Error("Category not found");
+      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
     }
 
-    return await Category.findByIdAndDelete(id);
+    await category.deleteOne();
   }
+
   static async getBySlug(slug) {
-    return await Category.findOne({ slug });
+    const category = await Category.findOne({ slug });
+    if (!category) {
+      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
+    }
+    return category;
   }
 }
 

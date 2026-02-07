@@ -2,11 +2,9 @@ const Product = require("./product.model");
 const Category = require("../catergories/category.model");
 
 class ProductService {
-  constructor() {
-    this.selectionStr = "name description brand price category rating _id";
-  }
+  static selectionStr = "name description brand price category rating _id";
 
-  async createProduct(data) {
+  static async create(data) {
     const category = await Category.findById(data.category);
     if (!category) throw new Error("Invalid Category");
 
@@ -35,7 +33,9 @@ class ProductService {
     const category = await Category.findById(data.category);
     if (!category) throw new Error("Invalid Category");
 
-    const updated = await Product.findByIdAndUpdate(productId, data, { new: true });
+    const updated = await Product.findByIdAndUpdate(productId, data, {
+      new: true,
+    });
     if (!updated) throw new Error("Product not found");
 
     return updated;
