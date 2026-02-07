@@ -16,17 +16,26 @@ class CategoryController {
 
   static async getOne(req, res, next) {
     try {
-      const category = await CategoryService.getCategoryById(req.params.id);
-
-      res.status(200).json({
-        status: "Success",
-        data: category,
-      });
+      const category = await CategoryService.getOne(req.params.id);
+      if (!category)
+        return res.status(404).json({ message: "Category not found" });
+      res.status(200).json(category);
     } catch (err) {
       next(err);
     }
   }
 
+  static async getBySlug(req, res, next) {
+    try {
+      const category = await CategoryService.getBySlug(req.params.slug);
+      if (!category)
+        return res.status(404).json({ message: "Category not found" });
+      res.status(200).json(category);
+    } catch (err) {
+      next(err);
+    }
+  }
+  
   static async getCount(req, res, next) {
     try {
       const count = await CategoryService.getCategoryCount();
@@ -57,7 +66,7 @@ class CategoryController {
     try {
       const category = await CategoryService.updateCategory(
         req.params.id,
-        req.body
+        req.body,
       );
 
       res.status(200).json({

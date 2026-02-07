@@ -1,11 +1,11 @@
 const Category = require("./category.model");
 
 class CategoryService {
-  async getAllCategories() {
+  static async getAll() {
     return await Category.find();
   }
 
-  async getCategoryById(id) {
+  static async getOne(id) {
     const category = await Category.findById(id);
     if (!category) {
       throw new Error("Category not found");
@@ -13,23 +13,24 @@ class CategoryService {
     return category;
   }
 
-  async createCategory(data) {
+  static async getCount() {
+    return await Category.countDocuments();
+  }
+  static async create(data) {
     const existing = await Category.findOne({ name: data.name });
     if (existing) {
       throw new Error("Category already exists");
     }
-
     const category = new Category(data);
     return await category.save();
   }
 
-  async updateCategory(id, data) {
+  static async update(id, data) {
     const category = await Category.findById(id);
     if (!category) {
       throw new Error("Category not found");
     }
 
-    // optional: prevent duplicate name on update
     if (data.name) {
       const duplicate = await Category.findOne({
         name: data.name,
@@ -40,10 +41,11 @@ class CategoryService {
       }
     }
 
-    return await Category.findByIdAndUpdate(id, data, { new: true });
+    Object.assign(category, data);
+    return await category.save();
   }
 
-  async deleteCategory(id) {
+  static async delete(id) {
     const category = await Category.findById(id);
     if (!category) {
       throw new Error("Category not found");
@@ -51,10 +53,9 @@ class CategoryService {
 
     return await Category.findByIdAndDelete(id);
   }
-
-  async getCategoryCount() {
-    return await Category.countDocuments();
+  static async getBySlug(slug) {
+    return await Category.findOne({ slug });
   }
 }
 
-module.exports = new CategoryService();
+module.exports = CategoryService;

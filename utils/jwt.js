@@ -6,6 +6,7 @@ const authJwt = function authJwt() {
   return jwt({
     secret,
     algorithms: ["HS256"],
+    requestProperty: "user",
     isRevoked: isRevoked,
   }).unless({
     path: [
@@ -18,10 +19,7 @@ const authJwt = function authJwt() {
   });
 };
 
-async function isRevoked(_, token) {
-  if (token.payload.isAdmin == false) {
-    return true;
-  }
+async function isRevoked() {
   return false;
 }
 

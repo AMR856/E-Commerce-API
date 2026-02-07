@@ -12,6 +12,9 @@ class CategoryValidationSchemas {
     color: Joi.string().trim().allow("").messages({
       "string.base": "Color must be a string",
     }),
+    slug: Joi.string().trim().allow("").messages({
+      "string.base": "Slug must be a string",
+    }),
   });
 
   static update = Joi.object({

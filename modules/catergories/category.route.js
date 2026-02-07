@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const CategoryValidationSchemas = require("./category.validation");
-const CategoryController = require('./category.controller');
+const CategoryController = require("./category.controller");
 const validator = require("../../middlewares/validator");
+const authorize = require("../../middlewares/authorize");
+const { PERMISSIONS } = require("../../config/roles");
 
+// public
 router.get(
   "/:id",
   validator.validateParams(CategoryValidationSchemas.idParam),
@@ -11,19 +14,25 @@ router.get(
 );
 router.get("/", CategoryController.getAll);
 router.get("/get/count", CategoryController.getCount);
+router.get("/slug/:slug", CategoryController.getBySlug);
+
+// admin specfic
 router.post(
   "/",
   validator.validateBody(CategoryValidationSchemas.create),
+  authorize(PERMISSIONS.MANAGE_CATEGORIES),
   CategoryController.create,
 );
 router.put(
   "/:id",
+  authorize(PERMISSIONS.MANAGE_CATEGORIES),
   validator.validateParams(CategoryValidationSchemas.idParam),
   validator.validateBody(CategoryValidationSchemas.update),
   CategoryController.update,
 );
 router.delete(
   "/:id",
+  authorize(PERMISSIONS.MANAGE_CATEGORIES),
   validator.validateParams(CategoryValidationSchemas.idParam),
   CategoryController.delete,
 );

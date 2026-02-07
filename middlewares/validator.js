@@ -1,5 +1,5 @@
 class Validator {
-  static body(schema) {
+  static validateBody(schema) {
     return (req, res, next) => {
       const { error } = schema.validate(req.body, { abortEarly: false });
 
@@ -15,7 +15,7 @@ class Validator {
     };
   }
 
-  static params(schema) {
+  static validateParams(schema) {
     return (req, res, next) => {
       const { error } = schema.validate(req.params, { abortEarly: false });
 
@@ -32,4 +32,4 @@ class Validator {
   }
 }
 
-module.exports = new Validator();
+module.exports = Validator;

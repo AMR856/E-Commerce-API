@@ -47,10 +47,11 @@ const userSchema = new mongoose.Schema({
     default: '',
     trim: true
   },
-  isAdmin: {
-    type: Boolean,
-    default: false
-  }
+  role: {
+      type: String,
+      enum: ["user", "admin", "moderator"],
+      default: "user"
+    }
 });
 
 userSchema.virtual('id').get(function () {

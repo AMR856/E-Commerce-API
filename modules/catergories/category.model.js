@@ -10,6 +10,8 @@ const categorySchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  slug: { type: String, unique: true },
+  description: { type: String },
   color: {
     type: String,
     trim: true,

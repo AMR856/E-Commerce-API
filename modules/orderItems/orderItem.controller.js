@@ -1,45 +1,90 @@
 const OrderItemService = require("./orderItem.service");
 
-const getAllOrderItems = async (_, res) => {
-  try {
-    const orderItems = await OrderItemService.getAllOrderItems();
-    if (!orderItems.length) {
-      return res.status(200).json({
+class OrderItemController {
+  static async getAll(req, res, next) {
+    try {
+      const orderItems = await OrderItemService.getAllOrderItems();
+
+      if (!orderItems.length) {
+        return res.status(200).json({
+          status: "Success",
+          message: "No order items were added yet",
+        });
+      }
+
+      res.status(200).json({
         status: "Success",
-        message: "No order items were added yet",
+        data: orderItems,
       });
+    } catch (err) {
+      next(err);
     }
-    res.status(200).json({ status: "Success", orderItems });
-  } catch (err) {
-    next(err);
   }
-};
 
-const getOrderitem = async (req, res) => {
-  try {
-    const orderItem = await OrderItemService.getOrderItemById(req.params.id);
-    if (!orderItem) {
-      return res
-        .status(404)
-        .json({ status: "Failed", message: "Order item wasn't found" });
+  static async getOne(req, res, next) {
+    try {
+      const orderItem = await OrderItemService.getOrderItemById(req.params.id);
+
+      res.status(200).json({
+        status: "Success",
+        data: orderItem,
+      });
+    } catch (err) {
+      next(err);
     }
-    res.status(200).json({ status: "Success", orderItem });
-  } catch (err) {
-    next(err);
   }
-};
 
-const getCount = async (_, res) => {
-  try {
-    const count = await OrderItemService.getOrderItemCount();
-    res.status(200).json({ status: "Success", count });
-  } catch (err) {
-    next(err);
+  static async getCount(req, res, next) {
+    try {
+      const count = await OrderItemService.getOrderItemCount();
+
+      res.status(200).json({
+        status: "Success",
+        count,
+      });
+    } catch (err) {
+      next(err);
+    }
   }
-};
 
-module.exports = {
-  getAllOrderItems,
-  getOrderitem,
-  getCount,
-};
+  static async create(req, res, next) {
+    try {
+      const orderItem = await OrderItemService.createOrderItem(req.body);
+      res.status(201).json({
+        status: "Success",
+        data: orderItem,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async update(req, res, next) {
+    try {
+      const orderItem = await OrderItemService.updateOrderItem(
+        req.params.id,
+        req.body
+      );
+      res.status(200).json({
+        status: "Success",
+        data: orderItem,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async delete(req, res, next) {
+    try {
+      await OrderItemService.deleteOrderItem(req.params.id);
+      res.status(200).json({
+        status: "Success",
+        message: "Order item deleted successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+}
+
+module.exports = OrderItemController;

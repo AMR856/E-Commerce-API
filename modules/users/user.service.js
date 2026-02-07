@@ -3,11 +3,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 class UserService {
-  constructor() {
-    this.selectionStr = "-passwordHash -__v";
+  static selectionStr = "-passwordHash -__v";
+
+  static async getAll() {
+    const users = await User.find().select(this.selectionStr);
+    return users;
   }
 
-  async createUser(data) {
+  static async getOne(id) {
+    return await User.findById(id).select(this.selectionStr);
+  }
+
+  static async getCount() {
+    return await User.countDocuments();
+  }
+
+  static async create(data) {
     const user = new User({
       name: data.name,
       email: data.email,
@@ -23,24 +34,7 @@ class UserService {
     return await user.save();
   }
 
-  async getAllUsers() {
-    const users = await User.find().select(this.selectionStr);
-    return users;
-  }
-
-  async getUserById(id) {
-    return await User.findById(id).select(this.selectionStr);
-  }
-
-  async getUserCount() {
-    return await User.countDocuments();
-  }
-
-  async deleteUserById(id) {
-    return await User.findByIdAndDelete(id);
-  }
-
-  async login(email, password) {
+  static async login(email, password) {
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
 
@@ -50,14 +44,38 @@ class UserService {
     const token = jwt.sign(
       {
         userId: user.id,
-        isAdmin: user.isAdmin,
+        role: user.role
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     return { email: user.email, token };
   }
+  static async update(id, data) {
+    return await User.findByIdAndUpdate(id, data, {
+      new: true,
+    }).select(this.selectionStr);
+  }
+
+  static async changePassword(userId, oldPassword, newPassword) {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const isValid = bcrypt.compareSync(oldPassword, user.passwordHash);
+    if (!isValid) {
+      throw new Error("Old password is incorrect");
+    }
+
+    user.passwordHash = bcrypt.hashSync(newPassword, 10);
+    await user.save();
+  }
+
+  static async delete(id) {
+    return await User.findByIdAndDelete(id);
+  }
 }
 
-module.exports = new UserService();
+module.exports = UserService;

@@ -1,0 +1,30 @@
+const ROLES = {
+  ADMIN: "admin",
+  USER: "user",
+};
+
+const PERMISSIONS = {
+  MANAGE_USERS: "manage_users",
+  READ_USERS: "read_users",
+  MANAGE_CATEGORIES: "manage_categories",
+  READ_CATEGORIES: "read_categories"
+};
+
+const ROLE_PERMISSIONS = {
+  [ROLES.ADMIN]: [
+    PERMISSIONS.MANAGE_USERS,
+    PERMISSIONS.READ_USERS,
+    PERMISSIONS.MANAGE_CATEGORIES,
+    PERMISSIONS.READ_CATEGORIES
+  ],
+  [ROLES.USER]: [
+    PERMISSIONS.READ_USERS,
+    PERMISSIONS.READ_CATEGORIES
+  ],
+};
+
+module.exports = {
+  ROLES,
+  PERMISSIONS,
+  ROLE_PERMISSIONS,
+};
