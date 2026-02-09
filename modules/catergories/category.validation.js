@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const objectId = require('../../utils/objectID');
 
 class CategoryValidationSchemas {
   static create = Joi.object({
@@ -28,13 +29,19 @@ class CategoryValidationSchemas {
     color: Joi.string().trim().allow("").messages({
       "string.base": "Color must be a string",
     }),
+    slug: Joi.string().trim().allow("").messages({
+      "string.base": "Slug must be a string",
+    }),
   });
 
   static idParam = Joi.object({
-    id: Joi.string().length(24).hex().required().messages({
-      "string.empty": "Category ID is required",
-      "string.length": "Category ID must be 24 characters",
-      "string.hex": "Category ID must be a valid hexadecimal",
+    id: objectId.required().messages({
+      "any.required": "Category ID is required",
+    }),
+  });
+  static slugParam = Joi.object({
+    slug: Joi.string().trim().required().messages({
+      "string.empty": "Slug is required",
     }),
   });
 }

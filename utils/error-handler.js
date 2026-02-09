@@ -11,7 +11,7 @@ const errorHandler = function (err, req, res, next) {
     });
   }
 
-  res.status(500).json({
+  res.status(err.status).json({
     status: "Failed",
     message: err,
   });

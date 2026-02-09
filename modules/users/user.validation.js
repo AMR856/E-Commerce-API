@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const objectId = require('../../utils/objectID');
 
 class UserValidationSchemas {
   static register = Joi.object({
@@ -73,10 +74,8 @@ class UserValidationSchemas {
   });
 
   static idParam = Joi.object({
-    id: Joi.string().length(24).hex().required().messages({
-      "string.empty": "User ID is required",
-      "string.length": "User ID must be 24 characters",
-      "string.hex": "User ID must be a valid hexadecimal",
+    id: objectId.required().messages({
+      "any.required": "User ID is required",
     }),
   });
   static changePassword = Joi.object({

@@ -1,16 +1,13 @@
 const Joi = require("joi");
+const objectId = require('../../utils/objectID');
 
 class OrderItemValidationSchemas {
   static idParam = Joi.object({
-    id: Joi.string().length(24).hex().required().messages({
-      "string.empty": "OrderItem ID is required",
-      "string.length": "OrderItem  must be 24 characters",
-      "string.hex": "OrderItem ID must be a valid hexadecimal",
+    id: objectId.required().messages({
+      "any.required": "OrderItem ID is required",
     }),
   });
-  static create = Joi.object({
-
-  });
+  static create = Joi.object({});
 }
 
 module.exports = OrderItemValidationSchemas;

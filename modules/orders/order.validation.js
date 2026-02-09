@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const objectId = require('../../utils/objectID');
 
 class OrderValidationSchemas {
   static create = Joi.object({
@@ -47,7 +48,6 @@ class OrderValidationSchemas {
     dateOrdered: Joi.date().optional(),
   });
 
-
   static getUserOrders = Joi.object({
     userId: Joi.string().length(24).hex().required().messages({
       "string.empty": "User ID is required",
@@ -57,12 +57,9 @@ class OrderValidationSchemas {
   });
 
   static idParam = Joi.object({
-    id: Joi.string().length(24).hex().required().messages({
-      "string.empty": "User ID is required",
-      "string.length": "User ID must be 24 characters",
-      "string.hex": "User ID must be a valid hexadecimal",
+    id: objectId.required().messages({
+      "any.required": "Order ID is required",
     }),
-    status: Joi.string().valid("Pending", "Shipped", "Delivered"),
   });
 }
 
