@@ -6,25 +6,6 @@ const OrderController = require("./order.controller");
 const authorize = require("../../middlewares/authorize");
 const { PERMISSIONS } = require("../../config/roles");
 
-// Admin
-router.get("/", authorize(PERMISSIONS.READ_ALL_ORDERS), OrderController.getAll);
-router.get(
-  "/get/userorders/:userId",
-  authorize(PERMISSIONS.READ_ALL_ORDERS),
-  validator.validateParams(OrderValidationSchemas.getUserOrders),
-  OrderController.getUserOrders,
-);
-router.get(
-  "/get/count",
-  authorize(PERMISSIONS.READ_ALL_ORDERS),
-  OrderController.getCount,
-);
-router.get(
-  "/get/totalsales",
-  authorize(PERMISSIONS.READ_ALL_ORDERS),
-  OrderController.getTotalSales,
-);
-
 // User Specfic (It has the match the id of the user or be an admin)
 router.get(
   "/:id",
@@ -55,5 +36,25 @@ router.delete(
   validator.validateParams(OrderValidationSchemas.idParam),
   OrderController.delete,  // Checked 
 );
+
+// Admin
+router.get("/", authorize(PERMISSIONS.READ_ALL_ORDERS), OrderController.getAll);
+router.get(
+  "/get/userorders/:userId",
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  validator.validateParams(OrderValidationSchemas.getUserOrders),
+  OrderController.getUserOrders,
+);
+router.get(
+  "/get/count",
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  OrderController.getCount,
+);
+router.get(
+  "/get/totalsales",
+  authorize(PERMISSIONS.READ_ALL_ORDERS),
+  OrderController.getTotalSales,
+);
+
 
 module.exports = router;

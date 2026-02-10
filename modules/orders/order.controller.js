@@ -87,13 +87,12 @@ class OrderController {
 
   static delete = async (req, res, next) => {
     try {
-      const order = await orderService.delete(req.params.id, req.user);
+      await orderService.delete(req.params.id, req.user);
       res
         .status(200)
         .json({
           status: HTTPStatusText.SUCCESS,
           message: "Order deleted successfully",
-          order,
         });
     } catch (err) {
       next(err);

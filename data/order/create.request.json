@@ -1,0 +1,40 @@
+[
+  {
+    "orderItem": [
+      {
+        "product": "698b39d63ef13d60b156fdc0",
+        "quantity": 3
+      }
+    ],
+    "shippingAddress1": "123 Main St",
+    "shippingAddress2": "Apt 4B",
+    "city": "Alexandria",
+    "zip": "21500",
+    "country": "Egypt",
+    "phone": "+201234567890",
+    "status": "Pending",
+    "user": "698a842616595916c786a7b0",
+    "dateOrdered": "2026-02-10T14:00:00.000Z"
+  },
+  {
+    "orderItem": [
+      {
+        "product": "698b3ac9eb0ea8be4ec7f2ea",
+        "quantity": 2
+      },
+      {
+        "product": "698b39d63ef13d60b156fdc0",
+        "quantity": 1
+      }
+    ],
+    "shippingAddress1": "456 Nile St",
+    "shippingAddress2": "",
+    "city": "Cairo",
+    "zip": "",
+    "country": "Egypt",
+    "phone": "+201098765432",
+    "status": "Shipped",
+    "user": "698a842616595916c786a7b0",
+    "dateOrdered": "2026-02-10T14:10:00.000Z"
+  }
+]
