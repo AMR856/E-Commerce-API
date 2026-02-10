@@ -14,10 +14,12 @@ class Validator {
       next();
     };
   }
-
   static validateParams(schema) {
     return (req, res, next) => {
-      const { error } = schema.validate(req.params, { abortEarly: false });
+      const { error } = schema.validate(req.params, {
+        abortEarly: false,
+        convert: true,
+      });
 
       if (error) {
         const messages = error.details.map((detail) => detail.message);

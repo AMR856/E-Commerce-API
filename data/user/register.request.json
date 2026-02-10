@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Ahmed Hassan",
+    "email": "ahmed.hassan@example.com",
+    "password": "password123",
+    "street": "El Geish Road",
+    "apartment": "12B",
+    "city": "Alexandria",
+    "zip": "21500",
+    "country": "Egypt",
+    "phone": "+201234567890",
+    "role": "admin"
+  },
+  {
+    "name": "Clementine",
+    "email": "clem1234@example.com",
+    "password": "password123",
+    "street": "Grove Street",
+    "apartment": "12B",
+    "city": "Savannah",
+    "zip": "21500",
+    "country": "USA",
+    "phone": "+201234567890",
+    "role": "admin"
+  },
+    {
+    "name": "Chrissy",
+    "email": "chrissy1234@example.com",
+    "password": "password1234",
+    "street": "Boulevard of broken dreams",
+    "apartment": "12B",
+    "city": "New Jersey",
+    "zip": "21500",
+    "country": "USA",
+    "phone": "+201234567890",
+    "role": "admin"
+  },
+  {
+    "name": "Sara Mohamed",
+    "email": "sara.mohamed@gmail.com",
+    "password": "securePass99",
+    "city": "Cairo",
+    "country": "Egypt",
+    "role": "admin"
+  }
+]

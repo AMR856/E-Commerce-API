@@ -110,10 +110,12 @@ class ProductService {
   }
 
   static async update(productId, data) {
-    const category = await Category.findById(data.category);
-    if (!category)
-      throw new CustomError("Invalid Category", 400, HTTPStatusText.FAIL);
-
+    if (data.category) {
+      const category = await Category.findById(data.category);
+      if (!category)
+        throw new CustomError("Invalid Category", 400, HTTPStatusText.FAIL);
+    }
+    console.log(data);
     const updated = await Product.findByIdAndUpdate(productId, data, {
       new: true,
     });
@@ -129,12 +131,12 @@ class ProductService {
       throw new CustomError("Product not found", 404, HTTPStatusText.FAIL);
     }
 
-    const newRating = data.rating;
+    const newRating = Number(data.rating);
 
-    const totalRating = product.rating * product.numReviews + newRating;
+    const totalRating = Number(product.rating) * Number(product.numReviews) + newRating;
 
-    product.numReviews += 1;
-    product.rating = totalRating / product.numReviews;
+    product.numReviews = Number(product.numReviews) + 1;
+    product.rating = Number((totalRating / product.numReviews).toFixed(3));
 
     await product.save();
 

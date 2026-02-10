@@ -93,7 +93,7 @@ class ProductValidationSchemas {
       "boolean.base": "isFeatured must be true or false",
     }),
   });
-  static isName = Joi.object({
+  static name = Joi.object({
     name: Joi.string().min(1).max(50).required().messages({
       "string.base": "Product name must be a text string",
       "string.empty": "Product name is required",

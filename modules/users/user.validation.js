@@ -14,13 +14,15 @@ class UserValidationSchemas {
       "string.empty": "Password is required",
       "string.min": "Password must be at least 6 characters",
     }),
+    role: Joi.string().valid("user", "admin").messages({
+      "any.only": "Role must be either 'user' or 'admin'",
+    }),
     street: Joi.string().allow("").optional(),
     apartment: Joi.string().allow("").optional(),
     city: Joi.string().allow("").optional(),
     zip: Joi.string().allow("").optional(),
     country: Joi.string().allow("").optional(),
     phone: Joi.string().allow("").optional(),
-    isAdmin: Joi.boolean().optional(),
   });
 
   static login = Joi.object({

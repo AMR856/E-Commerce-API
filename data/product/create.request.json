@@ -1,0 +1,25 @@
+[
+  {
+    "name": "iPhone 15 Pro",
+    "description": "Apple flagship smartphone",
+    "richDescrition": "A17 chip, titanium body, advanced camera system.",
+    "price": 1499,
+    "category": "65cfa6e9f1c2b4d1e8a91b22",
+    "countInStock": 50,
+    "brand": "Apple",
+    "images": [
+      "https://fastly.picsum.photos/id/1020/200/300.jpg?hmac=yG-OAzmEHXsUkXro-pf0fGaPnWTLuTJ8ohSos5IaAng",
+      "https://fastly.picsum.photos/id/565/200/300.jpg?hmac=Ho0T-TCTMRX_uDDGzaLhGzTmukSZdDjpGZJTbL0NY3k"
+    ],
+    "isFeatured": true
+  },
+  {
+    "name": "Logitech MX Master 3",
+    "description": "Wireless ergonomic mouse",
+    "price": 120,
+    "category": "65cfa6e9f1c2b4d1e8a91b33",
+    "countInStock": 200,
+    "brand": "Logitech",
+    "isFeatured": false
+  }
+]

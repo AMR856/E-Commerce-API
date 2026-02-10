@@ -5,7 +5,7 @@ class UserController {
   static async getMe(req, res, next) {
     try {
       const user = await userService.getOne(req.user.userId);
-      res.json({ status: "Success", user });
+      res.json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {
       next(err);
     }
@@ -37,7 +37,7 @@ class UserController {
 
   static async getCount(_, res, next) {
     try {
-      const count = await userService.getUserCount();
+      const count = await userService.getCount();
       res.status(200).json({ status: HTTPStatusText.SUCCESS, count });
     } catch (err) {
       next(err);
@@ -79,8 +79,8 @@ class UserController {
   static async update(req, res, next) {
     try {
       const userId = req.params.id || req.user.userId;
-
-      const user = await userService.update(userId, req.body);
+      const role = req.user.role;
+      const user = await userService.update(userId, req.body, role);
 
       res.status(200).json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {

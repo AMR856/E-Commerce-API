@@ -33,12 +33,12 @@ mongoose
 
 app.use(express.json());
 app.use(morgan("tiny", { stream: accessLogStream }));
-// app.use(authJwt());
+app.use(authJwt());
 app.use(errorHandler);
 
 app.use('public/uploads', express.static(__dirname + 'public/uploads'))
 app.use(`${process.env.API_URL}/products`, productRouter);
-app.use(`${process.env.API_URL}/category`, categoryRouter);
+app.use(`${process.env.API_URL}/categories`, categoryRouter);
 app.use(`${process.env.API_URL}/users`, userRouter);
 app.use(`${process.env.API_URL}/orders`, orderRouter);
 app.use(`${process.env.API_URL}/order-items`, orderItemsRouter);

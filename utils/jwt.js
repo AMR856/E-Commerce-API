@@ -24,3 +24,4 @@ async function isRevoked() {
 }
 
 module.exports = authJwt;
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OThhNTQ0MzYxNzIwMWZmZWJjMDE2YmUiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzA2NzMyMzIsImV4cCI6MTc3MDc1OTYzMn0.Rl91Kay4ZZ-LGkb7Ud4jxXLafGoszpHTmyzDBxp8Th8

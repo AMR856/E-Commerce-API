@@ -7,13 +7,14 @@ const authorize = require("../../middlewares/authorize");
 const { PERMISSIONS } = require("../../config/roles");
 
 // public
+
+router.get("/", CategoryController.getAll);
+router.get("/count", CategoryController.getCount);
 router.get(
   "/:id",
   validator.validateParams(CategoryValidationSchemas.idParam),
   CategoryController.getOne,
 );
-router.get("/", CategoryController.getAll);
-router.get("/get/count", CategoryController.getCount);
 router.get("/slug/:slug", CategoryController.getBySlug);
 
 // admin specfic

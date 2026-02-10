@@ -39,7 +39,7 @@ router.post(
 // Admin
 router.get("/", authorize(PERMISSIONS.READ_USERS), UserController.getAll);
 router.get(
-  "/get/count",
+  "/count",
   authorize(PERMISSIONS.READ_USERS),
   UserController.getCount,
 );

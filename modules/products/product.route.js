@@ -10,16 +10,15 @@ const { PERMISSIONS } = require("../../config/roles");
 // public
 router.get(
   "/",
-  validator.validateParams(ProductValidationSchemas.name),
   ProductController.getAll,
 );
 router.get(
-  "by-id/:id",
+  "/by-id/:id",
   validator.validateParams(ProductValidationSchemas.idParam),
   ProductController.getOneByID,
 );
 router.get(
-  "by-name/:name",
+  "/by-name/:name",
   validator.validateParams(ProductValidationSchemas.name),
   ProductController.getOneByName,
 );
@@ -28,15 +27,14 @@ router.get(
   validator.validateParams(ProductValidationSchemas.idParam),
   ProductController.getRatings,
 );
-
-router.get("/get/featured", ProductController.getFeaturedProducts);
-
-// Admin
 router.get(
   "/get/count",
-  authorize(PERMISSIONS.MANAGE_PRODUCTS),
   ProductController.getCount,
 );
+router.get("/featured", ProductController.getFeaturedProducts);
+
+// Admin
+
 router.post(
   "/",
   uploadOptions.single("image"),

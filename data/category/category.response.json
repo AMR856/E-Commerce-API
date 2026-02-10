@@ -1,0 +1,38 @@
+{
+  "status": "success",
+  "results": 4,
+  "data": [
+    {
+      "_id": "698a82d0baa88d195a570688",
+      "name": "Electronics",
+      "icon": "fa-solid fa-bolt",
+      "slug": "electronics",
+      "color": "#FF5733",
+      "__v": 0
+    },
+    {
+      "_id": "698a842616595916c786a7b0",
+      "name": "Fallout",
+      "icon": "some-icon",
+      "slug": "games",
+      "color": "#FF5733",
+      "__v": 0
+    },
+    {
+      "_id": "698a843716595916c786a7b3",
+      "name": "gta 5",
+      "icon": "some-icon",
+      "slug": "grand theft auto",
+      "color": "#FF5733",
+      "__v": 0
+    },
+    {
+      "_id": "698a844f16595916c786a7b6",
+      "name": "enjoyGaming",
+      "icon": "some-icon",
+      "slug": "gaming",
+      "color": "#FF5733",
+      "__v": 0
+    }
+  ]
+}

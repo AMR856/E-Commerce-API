@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Electronics",
+    "icon": "fa-solid fa-bolt",
+    "color": "#FF5733",
+    "slug": "electronics"
+  },
+  {
+    "name": "Books",
+    "icon": "",
+    "color": "",
+    "slug": "books"
+  }
+]

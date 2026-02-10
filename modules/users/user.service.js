@@ -2,7 +2,7 @@ const User = require("./user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const CustomError = require("../../utils/customError");
-const HTTPStatusText = require('../../utils/HTTPStatusText');
+const HTTPStatusText = require("../../utils/HTTPStatusText");
 
 class UserService {
   static selectionStr = "-passwordHash -__v";
@@ -13,7 +13,10 @@ class UserService {
   }
 
   static async getOne(id) {
-    return await User.findById(id).select(this.selectionStr);
+    const user = await User.findById(id).select(this.selectionStr);
+    if (!user)
+      throw new CustomError("User not found", 404, HTTPStatusText.FAIL);
+    return user;
   }
 
   static async getCount() {
@@ -31,7 +34,7 @@ class UserService {
       zip: data.zip || "",
       country: data.country || "",
       phone: data.phone || "",
-      isAdmin: data.isAdmin || false,
+      role: data.role || "user",
     });
     return await user.save();
   }
@@ -39,12 +42,20 @@ class UserService {
   static async login(email, password) {
     const user = await User.findOne({ email });
     if (!user) {
-      throw new CustomError("Invalid email or password", 401, HTTPStatusText.FAIL);
+      throw new CustomError(
+        "Invalid email or password",
+        401,
+        HTTPStatusText.FAIL,
+      );
     }
 
     const isValid = bcrypt.compareSync(password, user.passwordHash);
     if (!isValid) {
-      throw new CustomError("Invalid email or password", 401, HTTPStatusText.FAIL);
+      throw new CustomError(
+        "Invalid email or password",
+        401,
+        HTTPStatusText.FAIL,
+      );
     }
 
     const token = jwt.sign(
@@ -58,10 +69,18 @@ class UserService {
 
     return { email: user.email, token };
   }
-  static async update(id, data) {
-    return await User.findByIdAndUpdate(id, data, {
+  static async update(userId, data, role) {
+    if (role !== "admin") {
+      delete data.role;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, data, {
       new: true,
     }).select(this.selectionStr);
+    if (!updatedUser) {
+      throw new CustomError("User not found", 404, HTTPStatusText.FAIL);
+    }
+    return updatedUser;
   }
 
   static async changePassword(userId, oldPassword, newPassword) {
@@ -72,7 +91,11 @@ class UserService {
 
     const isValid = bcrypt.compareSync(oldPassword, user.passwordHash);
     if (!isValid) {
-      throw new CustomError("Old password is incorrect", 401, HTTPStatusText.FAIL);
+      throw new CustomError(
+        "Old password is incorrect",
+        401,
+        HTTPStatusText.FAIL,
+      );
     }
 
     user.passwordHash = bcrypt.hashSync(newPassword, 10);
@@ -80,6 +103,10 @@ class UserService {
   }
 
   static async delete(id) {
+    const user = await User.findById(id);
+    if (!user) {
+      throw new CustomError("User not found", 404, HTTPStatusText.FAIL);
+    }
     return await User.findByIdAndDelete(id);
   }
 }
