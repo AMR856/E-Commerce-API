@@ -5,8 +5,8 @@ const app = require("../app");
 const User = require("../modules/users/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs/dist/bcrypt");
-
-
+const errorHandler = require('../utils/error-handler');
+app.use(errorHandler);
 
 const createToken = (user) =>
   jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
@@ -51,23 +51,25 @@ describe("Users Routes", () => {
 
   describe("POST /users/register", () => {
     it("should register new user", async () => {
-      const res = await request(app).post("/users/register").send({
-        name: "New User",
-        email: "new@test.com",
-      passwordHash: bcrypt.hashSync("12345678", 10),
-        street: "Boulevard of broken dreams",
-        apartment: "12B",
-        city: "New Jersey",
-        zip: "21500",
-        country: "USA",
-        phone: "+201234567890",
-        role: "admin",
-      });
+      const res = await request(app)
+        .post("/users/register")
+        .send({
+          name: "New User",
+          email: "new@test.com",
+          password: bcrypt.hashSync("12345678", 10),
+          street: "Boulevard of broken dreams",
+          apartment: "12B",
+          city: "New Jersey",
+          zip: "21500",
+          country: "USA",
+          phone: "+201234567890",
+          role: "admin",
+        });
       expect(res.statusCode).toBe(201);
-      expect(res.body).toHaveProperty("email", "new@test.com");
-      expect(res.body).toHaveProperty("street", "Boulevard of broken dreams");
-      expect(res.body).toHaveProperty("apartment", "12B");
-      expect(res.body).toHaveProperty("city", "New Jersey");
+      expect(res.body.user).toHaveProperty("email", "new@test.com");
+      expect(res.body.user).toHaveProperty("street", "Boulevard of broken dreams");
+      expect(res.body.user).toHaveProperty("apartment", "12B");
+      expect(res.body.user).toHaveProperty("city", "New Jersey");
     });
   });
 
@@ -89,7 +91,6 @@ describe("Users Routes", () => {
         email: "nonexistent@test.com",
         password: "12345678",
       });
-
       expect(res.statusCode).toBe(401);
       expect(res.body).toHaveProperty("message", "Invalid email or password");
     });
@@ -107,12 +108,13 @@ describe("Users Routes", () => {
 
   describe("GET /users/me", () => {
     it("should get current user", async () => {
+
       const res = await request(app)
         .get("/users/me")
         .set("Authorization", `Bearer ${userToken}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty("email", "user@test.com");
+      expect(res.body.user).toHaveProperty("email", "user@test.com");
     });
   });
 
@@ -124,7 +126,7 @@ describe("Users Routes", () => {
         .send({ name: "Updated Name" });
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty("name", "Updated Name");
+      expect(res.body.user).toHaveProperty("name", "Updated Name");
     });
   });
 
@@ -168,7 +170,7 @@ describe("Users Routes", () => {
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty("_id");
+      expect(res.body.user).toHaveProperty("_id");
     });
 
     it("should deny normal user", async () => {

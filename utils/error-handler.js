@@ -14,9 +14,9 @@ const errorHandler = function (err, req, res, next) {
     });
   }
 
-  res.status(err.status).json({
-    status: HTTPStatusText.FAIL,
-    message: err,
+  res.status(err.statusCode).json({
+    status: err.statusText,
+    message: err.message,
   });
 };
 

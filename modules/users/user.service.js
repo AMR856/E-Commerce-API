@@ -14,6 +14,7 @@ class UserService {
 
   static async getOne(id) {
     const user = await User.findById(id).select(this.selectionStr);
+
     if (!user)
       throw new CustomError("User not found", 404, HTTPStatusText.FAIL);
     return user;
@@ -48,7 +49,7 @@ class UserService {
         HTTPStatusText.FAIL,
       );
     }
-
+    
     const isValid = bcrypt.compareSync(password, user.passwordHash);
     if (!isValid) {
       throw new CustomError(

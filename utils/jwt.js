@@ -1,6 +1,5 @@
 const { expressjwt: jwt } = require("express-jwt");
 
-// http://localhost:3000/api-docs/
 const authJwt = function authJwt() {
   const secret = process.env.JWT_SECRET;
   const apiURL = process.env.API_URL;
