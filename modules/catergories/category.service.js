@@ -10,7 +10,7 @@ class CategoryService {
   static async getOne(id) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
+      throw new CustomError("Category not found", 404, HTTPStatusText.FAIL);
     }
     return category;
   }
@@ -23,12 +23,11 @@ class CategoryService {
     const existing = await Category.findOne({ name: data.name });
     if (existing) {
       throw new CustomError(
-        409,
         "Category already exists",
+        409,
         HTTPStatusText.ERROR,
       );
     }
-
     const category = new Category(data);
     return await category.save();
   }
@@ -36,7 +35,7 @@ class CategoryService {
   static async update(id, data) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
+      throw new CustomError("Category not found", 404, HTTPStatusText.FAIL);
     }
 
     if (data.name) {
@@ -47,8 +46,9 @@ class CategoryService {
 
       if (duplicate) {
         throw new CustomError(
-          409,
           "Category name already exists",
+          409,
+
           HTTPStatusText.ERROR,
         );
       }
@@ -61,7 +61,7 @@ class CategoryService {
   static async delete(id) {
     const category = await Category.findById(id);
     if (!category) {
-      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
+      throw new CustomError("Category not found", 404, HTTPStatusText.FAIL);
     }
 
     await category.deleteOne();
@@ -70,7 +70,7 @@ class CategoryService {
   static async getBySlug(slug) {
     const category = await Category.findOne({ slug });
     if (!category) {
-      throw new CustomError(404, "Category not found", HTTPStatusText.FAIL);
+      throw new CustomError("Category not found", 404, HTTPStatusText.FAIL);
     }
     return category;
   }

@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const objectId = require('../../utils/objectID');
+const objectId = require("../../utils/objectID");
 
 class OrderValidationSchemas {
   static create = Joi.object({
@@ -15,6 +15,11 @@ class OrderValidationSchemas {
             "number.base": "Quantity must be a number",
             "number.min": "Quantity must be at least 1",
             "any.required": "Quantity is required",
+          }),
+          user: Joi.string().length(24).hex().required().messages({
+            "string.empty": "User ID is required",
+            "string.length": "User ID must be 24 characters",
+            "string.hex": "User ID must be a valid hexadecimal",
           }),
         }),
       )

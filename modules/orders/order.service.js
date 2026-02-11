@@ -42,11 +42,9 @@ class OrderService {
           populate: "category",
         },
       });
-
     if (!order) {
       throw new CustomError("Order not found", 404, HTTPStatusText.FAIL);
     }
-
     if (user.role !== "admin" && order.user._id.toString() !== user.userId) {
       throw new CustomError("Unauthorized access", 403, HTTPStatusText.FAIL);
     }
@@ -62,26 +60,23 @@ class OrderService {
         HTTPStatusText.FAIL,
       );
     }
-
     const orderItemIds = await Promise.all(
       data.orderItem.map(async (item) => {
         const orderItem = new OrderItem({
           quantity: item.quantity,
           product: item.product,
+          user: data.user,
         });
-
         const savedOrderItem = await orderItem.save();
         return savedOrderItem._id;
       }),
     );
-
     const totalPrices = await Promise.all(
       orderItemIds.map(async (id) => {
         const orderItem = await OrderItem.findById(id).populate(
           "product",
           "price",
         );
-
         if (!orderItem || !orderItem.product) {
           throw new CustomError(
             "Invalid product in order",
@@ -160,7 +155,7 @@ class OrderService {
     if (!order) {
       throw new CustomError("Order not found", 404, HTTPStatusText.FAIL);
     }
-
+    
     if (user.role !== "admin" && order.user._id.toString() !== user.userId) {
       throw new CustomError("Unauthorized delete", 403, HTTPStatusText.FAIL);
     }

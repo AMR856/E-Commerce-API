@@ -88,6 +88,7 @@ class ProductService {
   }
 
   static async create(req) {
+
     const file = req.file;
     if (!file)
       throw new CustomError(
@@ -115,7 +116,6 @@ class ProductService {
       if (!category)
         throw new CustomError("Invalid Category", 400, HTTPStatusText.FAIL);
     }
-    console.log(data);
     const updated = await Product.findByIdAndUpdate(productId, data, {
       new: true,
     });

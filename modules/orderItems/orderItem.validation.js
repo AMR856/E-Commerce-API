@@ -11,8 +11,9 @@ class OrderItemValidationSchemas {
     }),
     product: objectId.required().messages({
       "any.required": "Product ID is required",
-    }),
+    })
   });
+
   static update = Joi.object({
     quantity: Joi.number().integer().min(1).messages({
       "number.base": "Quantity must be a number",
@@ -27,6 +28,7 @@ class OrderItemValidationSchemas {
     .messages({
       "object.min": "At least one field must be provided for update",
     });
+
   static idParam = Joi.object({
     id: objectId.required().messages({
       "any.required": "OrderItem ID is required",

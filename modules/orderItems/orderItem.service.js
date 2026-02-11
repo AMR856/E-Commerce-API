@@ -10,16 +10,16 @@ class OrderItemService {
 
   static async getOne(id, user) {
     const orderItem = await OrderItem.findById(id).populate("product");
-
+    
     if (!orderItem) {
-      throw new CustomError(404, "Order item not found", HTTPStatusText.FAIL);
+      throw new CustomError("Order item not found", 404, HTTPStatusText.FAIL);
     }
 
     if (
       user.role !== "admin" &&
-      orderItem.user.toString() !== user._id.toString()
+      orderItem.user.toString() !== user.userId.toString()
     ) {
-      throw new CustomError(403, "Unauthorized access", HTTPStatusText.FAIL);
+      throw new CustomError("Unauthorized access", 403, HTTPStatusText.FAIL);
     }
 
     return orderItem;
@@ -33,9 +33,8 @@ class OrderItemService {
   static async create(data, user) {
     const orderItem = new OrderItem({
       ...data,
-      user: user._id,
+      user: user.userId,
     });
-
     return await orderItem.save();
   }
 
@@ -43,14 +42,14 @@ class OrderItemService {
     const orderItem = await OrderItem.findById(id);
 
     if (!orderItem) {
-      throw new CustomError(404, "Order item not found", HTTPStatusText.FAIL);
+      throw new CustomError("Order item not found", 404, HTTPStatusText.FAIL);
     }
 
     if (
       user.role !== "admin" &&
-      orderItem.user.toString() !== user._id.toString()
+      orderItem.user.toString() !== user.userId.toString()
     ) {
-      throw new CustomError(403, "Unauthorized update", HTTPStatusText.FAIL);
+      throw new CustomError("Unauthorized update", 403, HTTPStatusText.FAIL);
     }
 
     return await OrderItem.findByIdAndUpdate(id, data, {
@@ -63,14 +62,14 @@ class OrderItemService {
     const orderItem = await OrderItem.findById(id);
 
     if (!orderItem) {
-      throw new CustomError(404, "Order item not found", HTTPStatusText.FAIL);
+      throw new CustomError("Order item not found", 404, HTTPStatusText.FAIL);
     }
 
     if (
       user.role !== "admin" &&
-      orderItem.user.toString() !== user._id.toString()
+      orderItem.user.toString() !== user.userId.toString()
     ) {
-      throw new CustomError(403, "Unauthorized delete", HTTPStatusText.FAIL);
+      throw new CustomError("Unauthorized delete", 403, HTTPStatusText.FAIL);
     }
 
     await orderItem.deleteOne();

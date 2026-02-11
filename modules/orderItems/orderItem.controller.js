@@ -5,7 +5,6 @@ class OrderItemController {
   static async getAll(req, res, next) {
     try {
       const orderItems = await OrderItemService.getAll(req.user);
-
       res.status(200).json({
         status: HTTPStatusText.SUCCESS,
         results: orderItems.length,
@@ -22,7 +21,6 @@ class OrderItemController {
         req.params.id,
         req.user
       );
-
       res.status(200).json({
         status: HTTPStatusText.SUCCESS,
         data: orderItem,
@@ -51,7 +49,6 @@ class OrderItemController {
         req.body,
         req.user
       );
-
       res.status(201).json({
         status: HTTPStatusText.SUCCESS,
         data: orderItem,

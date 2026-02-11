@@ -4,7 +4,7 @@ const HTTPStatusText = require("../../utils/HTTPStatusText");
 class UserController {
   static async getMe(req, res, next) {
     try {
-      const user = await userService.getOne(req.user.id);
+      const user = await userService.getOne(req.user.userId);
       res.json({ status: HTTPStatusText.SUCCESS, user });
     } catch (err) {
       next(err);
@@ -78,7 +78,7 @@ class UserController {
   }
   static async update(req, res, next) {
     try {
-      const userId = req.params.id || req.user.id;
+      const userId = req.params.id || req.user.userId;
       const role = req.user.role;
       const user = await userService.update(userId, req.body, role);
 
@@ -91,7 +91,7 @@ class UserController {
   static async changePassword(req, res, next) {
     try {
       await userService.changePassword(
-        req.user.id,
+        req.user.userId,
         req.body.oldPassword,
         req.body.newPassword,
       );
