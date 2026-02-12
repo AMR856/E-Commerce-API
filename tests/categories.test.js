@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const app = require("../app");
 const Category = require("../modules/catergories/category.model");
-const errorHandler = require("../utils/error-handler");
+const errorHandler = require("../utils/errorHandler");
 
 app.use(errorHandler);
 

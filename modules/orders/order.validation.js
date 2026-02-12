@@ -60,6 +60,45 @@ class OrderValidationSchemas {
       "string.hex": "User ID must be a valid hexadecimal",
     }),
   });
+  static updateStatus = Joi.object({
+    status: Joi.string()
+      .valid("Pending", "Shipped", "Delivered")
+      .required()
+      .messages({
+        "any.only": "Status must be Pending, Shipped, or Delivered",
+        "any.required": "Status is required",
+      }),
+  });
+
+  static update = Joi.object({
+    orderItem: Joi.array()
+      .items(
+        Joi.object({
+          product: Joi.string().length(24).hex().required().messages({
+            "string.empty": "Product ID is required",
+            "string.length": "Product ID must be 24 characters",
+            "string.hex": "Product ID must be a valid hexadecimal",
+          }),
+          quantity: Joi.number().integer().min(1).required().messages({
+            "number.base": "Quantity must be a number",
+            "number.min": "Quantity must be at least 1",
+            "any.required": "Quantity is required",
+          }),
+        }),
+      )
+      .min(1)
+      .optional()
+      .messages({
+        "array.min": "At least one order item is required",
+      }),
+
+    shippingAddress1: Joi.string().optional(),
+    shippingAddress2: Joi.string().allow("").optional(),
+    city: Joi.string().optional(),
+    zip: Joi.string().allow("").optional(),
+    country: Joi.string().optional(),
+    phone: Joi.string().optional(),
+  });
 
   static idParam = Joi.object({
     id: objectId.required().messages({

@@ -40,7 +40,6 @@ class OrderItemService {
 
   static async update(id, data, user) {
     const orderItem = await OrderItem.findById(id);
-
     if (!orderItem) {
       throw new CustomError("Order item not found", 404, HTTPStatusText.FAIL);
     }

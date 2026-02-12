@@ -6,7 +6,7 @@ const app = require("../app");
 const User = require("../modules/users/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs/dist/bcrypt");
-const errorHandler = require("../utils/error-handler");
+const errorHandler = require("../utils/errorHandler");
 
 app.use(errorHandler);
 

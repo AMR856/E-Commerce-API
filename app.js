@@ -8,7 +8,7 @@ const userRouter = require('./modules/users/user.route');
 const orderRouter = require('./modules/orders/order.route');
 const orderItemsRouter = require('./modules/orderItems/orderItem.route');
 const authJwt = require('./utils/jwt');
-const errorHandler = require("./utils/error-handler");
+const errorHandler = require("./utils/errorHandler");
 const setupSwagger = require("./config/swagger");
 
 const app = express();
